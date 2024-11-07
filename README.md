@@ -20,7 +20,19 @@ or [Sloth](https://repo.dairy.foundation/#/snapshots/dev/frozenmilk/sinister/Slo
 
 Pride acts like the old Sinister runtime
 
-Sloth allows sideloading
+Sloth allows sideloading (like fastload)
+differences from fastload:
+1. loads from the loaded folder defaultly, you delete it when you upload (don't
+   worry, its automated)
+2. `@NoUnload` can be put on classes to only load them from the apk, adding or
+   removing this annotation to a class and then Sloth loading it is undefined
+   behaviour
+3. listens to file system events rather than for a gradle notification (this
+   seems to speed things up)
+4. built on new Sinister, so supports dynamic class path scanning and unloading,
+   including OpMode registration, (so supports Dairy)
+5. Has a fix patch for Dash
+6. Not hacked onto the OnBotJava system, so doesn't break that
 
 If you install Sloth you also need to install the Sloth Load gradle plugin:
 
