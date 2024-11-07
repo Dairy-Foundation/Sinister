@@ -23,6 +23,7 @@ plugins {
 }
 
 group = "dev.frozenmilk.sinister.sloth"
+version = "0.0.0"
 
 java {
 	sourceCompatibility = JavaVersion.VERSION_1_8
@@ -51,15 +52,12 @@ publishing {
 				create<BasicAuthentication>("basic")
 			}
 		}
-	}
-	publications {
-		register<MavenPublication>("release") {
-			groupId = "dev.frozenmilk.sinister.sloth"
-			artifactId = "Load"
-			version = "1.0.0"
-
-			afterEvaluate {
-				from(components["kotlin"])
+		maven {
+			name = "DairySNAPSHOT"
+			url = uri("https://repo.dairy.foundation/snapshots")
+			credentials(PasswordCredentials::class)
+			authentication {
+				create<BasicAuthentication>("basic")
 			}
 		}
 	}
@@ -68,7 +66,7 @@ publishing {
 gradlePlugin {
 	plugins {
 		create("Load") {
-			id = "dev.frozenmilk.sinister.sloth.load"
+			id = "dev.frozenmilk.sinister.sloth.Load"
 			implementationClass = "dev.frozenmilk.sinister.sloth.Load"
 		}
 	}

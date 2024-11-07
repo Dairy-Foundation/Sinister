@@ -68,12 +68,20 @@ publishing {
 				create<BasicAuthentication>("basic")
 			}
 		}
+		maven {
+			name = "DairySNAPSHOT"
+			url = uri("https://repo.dairy.foundation/snapshots")
+			credentials(PasswordCredentials::class)
+			authentication {
+				create<BasicAuthentication>("basic")
+			}
+		}
 	}
 	publications {
 		register<MavenPublication>("release") {
 			groupId = "dev.frozenmilk.sinister.sloth"
 			artifactId = "DashFix"
-			version = "1.0.0"
+			version = "0.0.0"
 
 			afterEvaluate {
 				from(components["release"])
