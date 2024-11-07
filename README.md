@@ -89,3 +89,5 @@ add the gradle tasks:
    ![](image/ensure_order.png)
 
 5. Give it a try!
+
+Run the deploySloth task you just added to deploy the code.
