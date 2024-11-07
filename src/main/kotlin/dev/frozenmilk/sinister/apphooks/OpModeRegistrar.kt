@@ -1,7 +1,8 @@
 package dev.frozenmilk.sinister.apphooks
 
 import com.qualcomm.robotcore.eventloop.opmode.AnnotatedOpModeManager
-import dev.frozenmilk.sinister.Preload
+import dev.frozenmilk.sinister.loading.NoUnload
+import dev.frozenmilk.sinister.loading.Preload
 
 /**
  * a more type-safe version of [com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar]
@@ -9,14 +10,15 @@ import dev.frozenmilk.sinister.Preload
  * static implementations of this class will be run as [com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar] methods are
  */
 @Preload
+@NoUnload
 @FunctionalInterface
-@JvmDefaultWithCompatibility
+@JvmDefaultWithoutCompatibility
 fun interface OpModeRegistrar {
 	fun registerOpModes(opModeManager: AnnotatedOpModeManager)
 }
 
 @Suppress("unused")
-object OpModeRegistrarFilter : HookFilter<OpModeRegistrar>(OpModeRegistrar::class.java) {
+object OpModeRegistrarScanner : HookScanner<OpModeRegistrar>(OpModeRegistrar::class.java) {
 	@JvmStatic
 	@com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar
 	fun registerOpModes(opModeManager: AnnotatedOpModeManager) {

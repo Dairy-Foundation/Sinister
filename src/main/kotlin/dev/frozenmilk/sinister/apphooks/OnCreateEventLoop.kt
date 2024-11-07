@@ -2,7 +2,8 @@ package dev.frozenmilk.sinister.apphooks
 
 import android.content.Context
 import com.qualcomm.ftccommon.FtcEventLoop
-import dev.frozenmilk.sinister.Preload
+import dev.frozenmilk.sinister.loading.NoUnload
+import dev.frozenmilk.sinister.loading.Preload
 
 /**
  * a more type-safe version of [org.firstinspires.ftc.ftccommon.external.OnCreateEventLoop]
@@ -10,13 +11,14 @@ import dev.frozenmilk.sinister.Preload
  * static implementations of this class will be run as [org.firstinspires.ftc.ftccommon.external.OnCreateEventLoop] methods are
  */
 @Preload
+@NoUnload
 @FunctionalInterface
-@JvmDefaultWithCompatibility
+@JvmDefaultWithoutCompatibility
 fun interface OnCreateEventLoop {
 	fun onCreateEventLoop(context: Context, ftcEventLoop: FtcEventLoop)
 }
 
-object OnCreateEventLoopFilter : HookFilter<OnCreateEventLoop>(OnCreateEventLoop::class.java) {
+object OnCreateEventLoopScanner : HookScanner<OnCreateEventLoop>(OnCreateEventLoop::class.java) {
 	@JvmStatic
 	@org.firstinspires.ftc.ftccommon.external.OnCreateEventLoop
 	fun onCreateEventLoop(context: Context, ftcEventLoop: FtcEventLoop) {

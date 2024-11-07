@@ -14,4 +14,10 @@ class Filtering {
 		val search = FullSearch()
 		Assert.assertEquals(false, search.determineInclusion("kotlin.io.path.PathsKt__PathRecursiveFunctionsKt\$copyToRecursively\$5"))
 	}
+
+	@Test
+	fun inclusions3() {
+		val search = FullSearch()
+		Assert.assertEquals(false, search.determineInclusion("android.util.Log"))
+	}
 }

@@ -1,6 +1,7 @@
 @file:JvmName("SinisterUtil")
 package dev.frozenmilk.sinister
 
+import dev.frozenmilk.sinister.loading.Preload
 import java.lang.reflect.Field
 import java.lang.reflect.Member
 import java.lang.reflect.Method
@@ -30,7 +31,7 @@ fun Member.isAbstract() : Boolean = Modifier.isAbstract(modifiers)
 fun Member.isFinal() : Boolean = Modifier.isFinal(modifiers)
 
 /**
- * used to find all [SinisterFilter]s, will give access to all loaded instances of a preloaded class, which is useful for kotlin objects, and similar java singletons
+ * used to find all [Scanner]s, will give access to all loaded instances of a preloaded class, which is useful for kotlin objects, and similar java singletons
  */
 fun <T> Class<*>.staticInstancesOf(type: Class<T>) : List<T> =
 	this.getAllFields {
@@ -43,10 +44,13 @@ fun <T> Class<*>.staticInstancesOf(type: Class<T>) : List<T> =
 	}
 
 @Throws(NoLoaderException::class)
-fun Class<*>.load() = classLoader?.loadClass(this.name) ?: throw NoLoaderException()
+fun Class<*>.load(classLoader: ClassLoader?) = classLoader?.loadClass(this.name) ?: throw NoLoaderException()
 
 @Throws(NoLoaderException::class, NoPreloadException::class)
-fun Class<*>.preload() = if (!inheritsAnnotation(Preload::class.java)) throw NoPreloadException() else load()
+fun Class<*>.preload() = if (!inheritsAnnotation(Preload::class.java)) throw NoPreloadException() else load(classLoader)
+
+@Throws(NoLoaderException::class, NoPreloadException::class)
+fun Class<*>.preload(classLoader: ClassLoader) = if (!inheritsAnnotation(Preload::class.java)) throw NoPreloadException() else load(classLoader)
 
 class NoLoaderException : Exception("Tried to load a class with no class loader")
 

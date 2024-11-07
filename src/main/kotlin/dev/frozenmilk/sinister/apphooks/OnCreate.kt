@@ -1,7 +1,8 @@
 package dev.frozenmilk.sinister.apphooks
 
 import android.content.Context
-import dev.frozenmilk.sinister.Preload
+import dev.frozenmilk.sinister.loading.NoUnload
+import dev.frozenmilk.sinister.loading.Preload
 
 /**
  * a more type-safe version of [org.firstinspires.ftc.ftccommon.external.OnCreate]
@@ -9,14 +10,20 @@ import dev.frozenmilk.sinister.Preload
  * static implementations of this class will be run as [org.firstinspires.ftc.ftccommon.external.OnCreate] methods are
  */
 @Preload
+@NoUnload
 @FunctionalInterface
-@JvmDefaultWithCompatibility
+@JvmDefaultWithoutCompatibility
 fun interface OnCreate {
+	/**
+	 * provides an easy way to perform initialization when the robot controller activity is created.
+	 *
+	 * @see org.firstinspires.ftc.ftccommon.external.OnCreate
+	 */
 	fun onCreate(context: Context)
 }
 
 @Suppress("unused")
-object OnCreateFilter : HookFilter<OnCreate>(OnCreate::class.java) {
+object OnCreateScanner : HookScanner<OnCreate>(OnCreate::class.java) {
 	fun onCreate(context: Context) {
 		allHooks.forEach { it.onCreate(context) }
 	}

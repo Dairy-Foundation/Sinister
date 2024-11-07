@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-	namespace = "dev.frozenmilk.sinister"
+	namespace = "dev.frozenmilk.sinister.sloth.dash"
 	compileSdk = 29
 
 	defaultConfig {
@@ -36,12 +36,21 @@ android {
 	}
 }
 
+repositories {
+	maven {
+		url = uri("https://maven.brott.dev/")
+	}
+}
+
 dependencies {
 	//noinspection GradleDependency
 	implementation("androidx.appcompat:appcompat:1.2.0")
 	testImplementation("junit:junit:4.13.2")
 
-	api(project(":Util"))
+	compileOnly(project(":Sinister"))
+	compileOnly("com.acmerobotics.dashboard:dashboard:0.4.16") {
+		exclude("org.firstinspires.ftc")
+	}
 
 	compileOnly("org.firstinspires.ftc:RobotCore:10.1.0")
 	compileOnly("org.firstinspires.ftc:FtcCommon:10.1.0")
@@ -62,8 +71,8 @@ publishing {
 	}
 	publications {
 		register<MavenPublication>("release") {
-			groupId = "dev.frozenmilk"
-			artifactId = "Sinister"
+			groupId = "dev.frozenmilk.sinister.sloth"
+			artifactId = "DashFix"
 			version = "1.0.0"
 
 			afterEvaluate {

@@ -2,7 +2,8 @@ package dev.frozenmilk.sinister.apphooks
 
 import android.content.Context
 import android.view.Menu
-import dev.frozenmilk.sinister.Preload
+import dev.frozenmilk.sinister.loading.NoUnload
+import dev.frozenmilk.sinister.loading.Preload
 
 /**
  * a more type-safe version of [org.firstinspires.ftc.ftccommon.external.OnCreateMenu]
@@ -10,14 +11,15 @@ import dev.frozenmilk.sinister.Preload
  * static implementations of this class will be run as [org.firstinspires.ftc.ftccommon.external.OnCreateMenu] methods are
  */
 @Preload
+@NoUnload
 @FunctionalInterface
-@JvmDefaultWithCompatibility
+@JvmDefaultWithoutCompatibility
 fun interface OnCreateMenu {
 	fun onCreateMenu(context: Context, menu: Menu)
 }
 
 @Suppress("unused")
-object OnCreateMenuFilter : HookFilter<OnCreateMenu>(OnCreateMenu::class.java) {
+object OnCreateMenuScanner : HookScanner<OnCreateMenu>(OnCreateMenu::class.java) {
 	@JvmStatic
 	@org.firstinspires.ftc.ftccommon.external.OnCreateMenu
 	fun onCreateMenu(context: Context, menu: Menu) {

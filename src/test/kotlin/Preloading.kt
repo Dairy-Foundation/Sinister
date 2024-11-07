@@ -1,8 +1,8 @@
 import dev.frozenmilk.sinister.NoPreloadException
-import dev.frozenmilk.sinister.Preload
-import dev.frozenmilk.sinister.apphooks.CollectImplementationsFilter
-import dev.frozenmilk.sinister.apphooks.HookFilter
-import dev.frozenmilk.sinister.apphooks.OnCreateEventLoopFilter
+import dev.frozenmilk.sinister.loading.Preload
+import dev.frozenmilk.sinister.apphooks.CollectImplementationsScanner
+import dev.frozenmilk.sinister.apphooks.HookScanner
+import dev.frozenmilk.sinister.apphooks.OnCreateEventLoopScanner
 import dev.frozenmilk.sinister.preload
 import org.junit.Assert
 import org.junit.Test
@@ -26,9 +26,9 @@ class Preloading {
 
 	@Test
 	fun preloadComplex() {
-		CollectImplementationsFilter::class.java.preload()
-		HookFilter::class.java.preload()
-		OnCreateEventLoopFilter::class.java.preload()
+		CollectImplementationsScanner::class.java.preload()
+		HookScanner::class.java.preload()
+		OnCreateEventLoopScanner::class.java.preload()
 	}
 }
 

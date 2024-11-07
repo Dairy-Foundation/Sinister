@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-	namespace = "dev.frozenmilk.sinister"
+	namespace = "dev.frozenmilk.sinister.sloth"
 	compileSdk = 29
 
 	defaultConfig {
@@ -41,7 +41,7 @@ dependencies {
 	implementation("androidx.appcompat:appcompat:1.2.0")
 	testImplementation("junit:junit:4.13.2")
 
-	api(project(":Util"))
+	api(project(":Sinister"))
 
 	compileOnly("org.firstinspires.ftc:RobotCore:10.1.0")
 	compileOnly("org.firstinspires.ftc:FtcCommon:10.1.0")
@@ -62,8 +62,8 @@ publishing {
 	}
 	publications {
 		register<MavenPublication>("release") {
-			groupId = "dev.frozenmilk"
-			artifactId = "Sinister"
+			groupId = "dev.frozenmilk.sinister"
+			artifactId = "Sloth"
 			version = "1.0.0"
 
 			afterEvaluate {

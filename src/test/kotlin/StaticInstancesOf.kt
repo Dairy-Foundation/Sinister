@@ -1,5 +1,4 @@
-import dev.frozenmilk.sinister.NoPreloadException
-import dev.frozenmilk.sinister.Preload
+import dev.frozenmilk.sinister.loading.Preload
 import dev.frozenmilk.sinister.preload
 import dev.frozenmilk.sinister.staticInstancesOf
 import org.junit.Assert
