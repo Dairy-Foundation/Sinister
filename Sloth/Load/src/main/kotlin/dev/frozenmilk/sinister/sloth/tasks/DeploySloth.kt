@@ -28,17 +28,13 @@ abstract class DeploySloth : DefaultTask() {
 
 	@TaskAction
 	fun execute() {
-		try {
-			project.exec {
-				it.commandLine(
-					getAdbExecutable().get(),
-					"push",
-					getOutputDir().file("${getBundleBaseName().get()}.jar").get().asFile.absolutePath,
-					getDeployLocation().get(),
-				)
-			}
-		} catch (e: ExecException) {
-			error("Failed to connect to robot, ensure ADB connected to robot.")
+		project.exec {
+			it.commandLine(
+				getAdbExecutable().get(),
+				"push",
+				getOutputDir().file("${getBundleBaseName().get()}.jar").get().asFile.absolutePath,
+				getDeployLocation().get(),
+			)
 		}
 	}
 }

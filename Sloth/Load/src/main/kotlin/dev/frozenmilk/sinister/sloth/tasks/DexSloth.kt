@@ -17,7 +17,8 @@ abstract class DexSloth : Jar() {
 		this.dependsOn("dexBuilderDebug")
 		this.destinationDirectory.set(this.getOutputDir())
 		this.archiveBaseName.set(this.getDexBaseName())
-		this.from(project.buildDir.resolve("intermediates/project_dex_archive/debug/out")) {
+		val dexBuilderDebug = project.tasks.findByName("dexBuilderDebug")!!
+		this.from(dexBuilderDebug.outputs) {
 			it.exclude("*.jar")
 		}
 	}

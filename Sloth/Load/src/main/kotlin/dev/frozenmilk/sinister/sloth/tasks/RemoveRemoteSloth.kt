@@ -17,16 +17,12 @@ abstract class RemoveRemoteSloth : DefaultTask() {
 
 	@TaskAction
 	fun execute() {
-		try {
-			project.exec {
-				it.commandLine(
-					getAdbExecutable().get(),
-					"shell",
-					"rm -f ${getDeployLocation().get()}/loaded.jar"
-				)
-			}
-		} catch (e: ExecException) {
-			error("Failed to connect to robot, ensure ADB connected to robot.")
+		project.exec {
+			it.commandLine(
+				getAdbExecutable().get(),
+				"shell",
+				"rm -f ${getDeployLocation().get()}/loaded.jar"
+			)
 		}
 	}
 }
