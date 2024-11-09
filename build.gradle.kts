@@ -72,7 +72,7 @@ publishing {
 		register<MavenPublication>("release") {
 			groupId = "dev.frozenmilk"
 			artifactId = "Sinister"
-			version = "2.0.0"
+			version = "2.0.1"
 
 			afterEvaluate {
 				from(components["release"])
