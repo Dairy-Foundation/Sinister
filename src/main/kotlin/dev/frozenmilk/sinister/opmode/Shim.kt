@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister
 import com.qualcomm.robotcore.exception.DuplicateNameException
 import com.qualcomm.robotcore.util.RobotLog
 import dev.frozenmilk.sinister.loading.Preload
-import org.firstinspires.ftc.robotcore.internal.opmode.AnnotatedOpModeClassFilter
 import org.firstinspires.ftc.robotcore.internal.opmode.InstanceOpModeRegistrar
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMetaAndClass
@@ -104,9 +103,4 @@ internal object Shim : RegisteredOpModes() {
 			opModeClasses.values.map { it.meta } + opModeInstances.values.map { it.meta }
 		}
 	}
-}
-
-fun loadShim() {
-	// just loads and inits it
-	Shim
 }

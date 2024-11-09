@@ -44,7 +44,14 @@ fun <T> Class<*>.staticInstancesOf(type: Class<T>) : List<T> =
 	}
 
 @Throws(NoLoaderException::class)
-fun Class<*>.load(classLoader: ClassLoader?) = classLoader?.loadClass(this.name) ?: throw NoLoaderException()
+fun Class<*>.load(classLoader: ClassLoader?) = classLoader?.loadClass(this.name).apply {
+	getAllFields {
+		it.isStatic()
+	}.forEach {
+		it.isAccessible = true
+		it.get(this)
+	}
+} ?: throw NoLoaderException()
 
 @Throws(NoLoaderException::class, NoPreloadException::class)
 fun Class<*>.preload() = if (!inheritsAnnotation(Preload::class.java)) throw NoPreloadException() else load(classLoader)
