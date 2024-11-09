@@ -9,7 +9,7 @@ import dalvik.system.DexFile
 import dev.frozenmilk.sinister.Sinister.TAG
 import dev.frozenmilk.sinister.apphooks.OnCreateScanner
 import dev.frozenmilk.sinister.loading.NoUnload
-import dev.frozenmilk.sinister.opmode.loadShim
+import dev.frozenmilk.sinister.loading.Preload
 import dev.frozenmilk.sinister.targeting.FullSearch
 import org.firstinspires.ftc.ftccommon.external.OnCreate
 import java.util.concurrent.CompletableFuture
@@ -26,7 +26,6 @@ private object Sinister {
 	@JvmStatic
 	@Suppress("unused")
 	fun onCreate(context: Context) {
-		loadShim()
 		RobotLog.vv(TAG, "attempting boot on create")
 		if (run) {
 			RobotLog.vv(TAG, "already booted")
@@ -81,14 +80,17 @@ private object Sinister {
 
 	private fun preload(loader: ClassLoader, classes: List<Class<*>>) =
 		classes
-			.mapNotNull {
+			.filter {
 				try {
-					it.preload(loader)
-					RobotLog.vv(TAG, "preloading: ${it.simpleName}")
-					it
+					if (it.inheritsAnnotation(Preload::class.java)) {
+						RobotLog.vv(TAG, "preloading: ${it.simpleName}")
+						it.preload(loader)
+						true
+					}
+					else false
 				}
 				catch (_: Throwable) {
-					null
+					false
 				}
 			}
 
