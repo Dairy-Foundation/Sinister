@@ -9,8 +9,8 @@ import dalvik.system.DexFile
 import dev.frozenmilk.sinister.Sinister.TAG
 import dev.frozenmilk.sinister.apphooks.OnCreateScanner
 import dev.frozenmilk.sinister.loading.NoUnload
+import dev.frozenmilk.sinister.loading.Preload
 import dev.frozenmilk.sinister.loading.SinisterClassLoader
-import dev.frozenmilk.sinister.opmode.loadShim
 import dev.frozenmilk.sinister.targeting.FullSearch
 import dev.frozenmilk.sinister.targeting.TeamCodeSearch
 import org.firstinspires.ftc.ftccommon.external.OnCreate
@@ -126,7 +126,6 @@ private object Sinister : RecursiveFileObserver.Listener {
 	@JvmStatic
 	@Suppress("unused")
 	fun onCreate(context: Context) {
-		loadShim()
 		RobotLog.vv(TAG, "attempting boot on create")
 		if (run) {
 			RobotLog.vv(TAG, "already booted")
@@ -183,14 +182,18 @@ private object Sinister : RecursiveFileObserver.Listener {
 
 	private fun preload(loader: ClassLoader, classes: List<Class<*>>) =
 		classes
-			.mapNotNull {
+			.filter {
 				try {
-					it.preload(loader)
-					RobotLog.vv(TAG, "preloading: ${it.simpleName}")
-					it
+					if (it.inheritsAnnotation(Preload::class.java)) {
+						RobotLog.vv(TAG, "preloading: ${it.simpleName}")
+						it.preload(loader)
+						true
+					}
+					else false
 				}
-				catch (_: Throwable) {
-					null
+				catch (e: Throwable) {
+					RobotLog.ee(TAG, "failed to preload ${it.simpleName}: $e")
+					false
 				}
 			}
 
