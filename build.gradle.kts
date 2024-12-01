@@ -1,58 +1,48 @@
 plugins {
-	id("com.android.library")
-	id("kotlin-android")
+	id("dev.frozenmilk.library") version "10.1.1-0.0.0"
 	id("org.jetbrains.dokka") version "1.9.10"
 	id("maven-publish")
 }
 
 android {
 	namespace = "dev.frozenmilk.sinister"
-	compileSdk = 29
 
-	defaultConfig {
-		minSdk = 24
-		//noinspection ExpiredTargetSdkVersion
-		targetSdk = 28
-
-		testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-		consumerProguardFiles("consumer-rules.pro")
-	}
-
-	buildTypes {
-		release {
-			isMinifyEnabled = false
-			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+	publishing {
+		singleVariant("release") {
+			withSourcesJar()
+			withJavadocJar()
 		}
 	}
-	compileOptions {
-		sourceCompatibility = JavaVersion.VERSION_1_8
-		targetCompatibility = JavaVersion.VERSION_1_8
+}
 
-		kotlin {
-			compilerOptions {
-				freeCompilerArgs.add("-Xjvm-default=all")
-			}
+ftc {
+	kotlin
+
+	sdk {
+		appcompat
+		RobotCore
+		FtcCommon {
+			configurationNames += "testImplementation"
 		}
 	}
 }
 
 dependencies {
-	//noinspection GradleDependency
-	implementation("androidx.appcompat:appcompat:1.2.0")
 	testImplementation("junit:junit:4.13.2")
 
-	api(project(":Util"))
+	implementation("dev.frozenmilk.dairy:Util:1.1.0");
+}
 
-	compileOnly("org.firstinspires.ftc:RobotCore:10.1.0")
-	compileOnly("org.firstinspires.ftc:FtcCommon:10.1.0")
-
-	testImplementation("org.firstinspires.ftc:FtcCommon:10.1.0")
+tasks.withType<Test>().configureEach {
+	javaLauncher = javaToolchains.launcherFor {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
 }
 
 publishing {
 	repositories {
 		maven {
-			name = "Dairy"
+			name = "Release"
 			url = uri("https://repo.dairy.foundation/releases")
 			credentials(PasswordCredentials::class)
 			authentication {
@@ -60,7 +50,7 @@ publishing {
 			}
 		}
 		maven {
-			name = "DairySNAPSHOT"
+			name = "Snapshot"
 			url = uri("https://repo.dairy.foundation/snapshots")
 			credentials(PasswordCredentials::class)
 			authentication {
@@ -72,7 +62,7 @@ publishing {
 		register<MavenPublication>("release") {
 			groupId = "dev.frozenmilk"
 			artifactId = "Sinister"
-			version = "2.0.1"
+			version = "2.0.2"
 
 			afterEvaluate {
 				from(components["release"])

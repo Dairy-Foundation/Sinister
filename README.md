@@ -1,5 +1,5 @@
 <a href="https://repo.dairy.foundation/#/releases/dev/frozenmilk/Sinister" target="_blank">
-<img src="https://repo.dairy.foundation/api/badge/latest/releases/dev/frozenmilk/Sinister?color=   c14a&name=Sinister" />
+<img src="https://repo.dairy.foundation/api/badge/latest/releases/dev/frozenmilk/Sinister?color=40c14a&name=Sinister" />
 </a>
 
 This is a candidate for 2.0 of sinister.
