@@ -1,8 +1,13 @@
 package dev.frozenmilk.sinister
 
+import dev.frozenmilk.sinister.configurable.ConfigurableScanner
 import dev.frozenmilk.sinister.loading.NoUnload
 import dev.frozenmilk.sinister.loading.Preload
 import dev.frozenmilk.sinister.targeting.SearchTarget
+import dev.frozenmilk.util.graph.Graph
+import dev.frozenmilk.util.graph.rule.AdjacencyRule
+import dev.frozenmilk.util.graph.rule.dependsOn
+import dev.frozenmilk.util.graph.rule.independent
 
 /**
  * static implementations of this will get invoked at runtime by [dev.frozenmilk.sinister.Sinister]
@@ -14,7 +19,10 @@ import dev.frozenmilk.sinister.targeting.SearchTarget
 @NoUnload
 @JvmDefaultWithoutCompatibility
 interface Scanner {
-	// TODO add DAG dependencies
+	/**
+	 * allows this to depend on other [Scanner]s
+	 */
+	val adjacencyRule: AdjacencyRule<Scanner, Graph<Scanner>>
 
 	/**
 	 * items that should be ignored
@@ -72,4 +80,13 @@ interface Scanner {
 	 * gets run after [unload] is called for a round of unloading
 	 */
 	fun afterUnload(loader: ClassLoader) {}
+
+	companion object {
+		@JvmStatic
+		@get:JvmName("INDEPENDENT")
+		val INDEPENDENT = independent<Scanner, Graph<Scanner>>()
+		@JvmStatic
+		@get:JvmName("DEPENDS_ON_CONFIGURABLE")
+		val DEPENDS_ON_CONFIGURABLE = dependsOn { ConfigurableScanner }
+	}
 }

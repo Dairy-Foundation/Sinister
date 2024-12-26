@@ -2,6 +2,7 @@ package dev.frozenmilk.sinister.apphooks
 
 import android.content.Context
 import com.qualcomm.robotcore.util.WebHandlerManager
+import dev.frozenmilk.sinister.Scanner
 import dev.frozenmilk.sinister.loading.NoUnload
 import dev.frozenmilk.sinister.loading.Preload
 
@@ -20,9 +21,16 @@ fun interface WebHandlerRegistrar {
 
 @Suppress("unused")
 object WebHandlerRegistrarScanner : HookScanner<WebHandlerRegistrar>(WebHandlerRegistrar::class.java) {
-	@JvmStatic
-	@org.firstinspires.ftc.ftccommon.external.WebHandlerRegistrar
-	fun webHandlerRegistrar(context: Context, webHandlerManager: WebHandlerManager) {
-		allHooks.forEach { it.webHandlerRegistrar(context, webHandlerManager) }
+	override val adjacencyRule = Scanner.INDEPENDENT
+
+	/**
+	 * prevents [webHandlerRegistrar] from being exposed publicly
+	 */
+	private object CALLSITE {
+		@JvmStatic
+		@org.firstinspires.ftc.ftccommon.external.WebHandlerRegistrar
+		fun webHandlerRegistrar(context: Context, webHandlerManager: WebHandlerManager) {
+			allHooks.forEach { it.webHandlerRegistrar(context, webHandlerManager) }
+		}
 	}
 }

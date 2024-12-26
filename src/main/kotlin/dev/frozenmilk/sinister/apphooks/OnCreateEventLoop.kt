@@ -2,6 +2,7 @@ package dev.frozenmilk.sinister.apphooks
 
 import android.content.Context
 import com.qualcomm.ftccommon.FtcEventLoop
+import dev.frozenmilk.sinister.Scanner
 import dev.frozenmilk.sinister.loading.NoUnload
 import dev.frozenmilk.sinister.loading.Preload
 
@@ -19,11 +20,18 @@ fun interface OnCreateEventLoop {
 }
 
 object OnCreateEventLoopScanner : HookScanner<OnCreateEventLoop>(OnCreateEventLoop::class.java) {
-	@JvmStatic
-	@org.firstinspires.ftc.ftccommon.external.OnCreateEventLoop
-	fun onCreateEventLoop(context: Context, ftcEventLoop: FtcEventLoop) {
-		allHooks.forEach {
-			it.onCreateEventLoop(context, ftcEventLoop)
+	override val adjacencyRule = Scanner.INDEPENDENT
+
+	/**
+	 * prevents [onCreateEventLoop] from being publicly exposed
+	 */
+	private object CALLSITE {
+		@JvmStatic
+		@org.firstinspires.ftc.ftccommon.external.OnCreateEventLoop
+		fun onCreateEventLoop(context: Context, ftcEventLoop: FtcEventLoop) {
+			allHooks.forEach {
+				it.onCreateEventLoop(context, ftcEventLoop)
+			}
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package dev.frozenmilk.sinister.apphooks
 
 import android.content.Context
+import dev.frozenmilk.sinister.Scanner
 import dev.frozenmilk.sinister.loading.NoUnload
 import dev.frozenmilk.sinister.loading.Preload
 
@@ -24,7 +25,9 @@ fun interface OnCreate {
 
 @Suppress("unused")
 object OnCreateScanner : HookScanner<OnCreate>(OnCreate::class.java) {
-	fun onCreate(context: Context) {
+	override val adjacencyRule = Scanner.INDEPENDENT
+
+	internal fun onCreate(context: Context) {
 		allHooks.forEach { it.onCreate(context) }
 	}
 }

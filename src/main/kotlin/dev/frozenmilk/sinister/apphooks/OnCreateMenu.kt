@@ -2,6 +2,7 @@ package dev.frozenmilk.sinister.apphooks
 
 import android.content.Context
 import android.view.Menu
+import dev.frozenmilk.sinister.Scanner
 import dev.frozenmilk.sinister.loading.NoUnload
 import dev.frozenmilk.sinister.loading.Preload
 
@@ -20,9 +21,16 @@ fun interface OnCreateMenu {
 
 @Suppress("unused")
 object OnCreateMenuScanner : HookScanner<OnCreateMenu>(OnCreateMenu::class.java) {
-	@JvmStatic
-	@org.firstinspires.ftc.ftccommon.external.OnCreateMenu
-	fun onCreateMenu(context: Context, menu: Menu) {
-		allHooks.forEach { it.onCreateMenu(context, menu) }
+	override val adjacencyRule = Scanner.INDEPENDENT
+
+	/**
+	 * prevents [onCreateMenu] from being exposed publicly
+	 */
+	private object CALLSITE {
+		@JvmStatic
+		@org.firstinspires.ftc.ftccommon.external.OnCreateMenu
+		fun onCreateMenu(context: Context, menu: Menu) {
+			allHooks.forEach { it.onCreateMenu(context, menu) }
+		}
 	}
 }

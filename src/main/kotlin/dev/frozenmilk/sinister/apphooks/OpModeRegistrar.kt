@@ -1,6 +1,7 @@
 package dev.frozenmilk.sinister.apphooks
 
 import com.qualcomm.robotcore.eventloop.opmode.AnnotatedOpModeManager
+import dev.frozenmilk.sinister.Scanner
 import dev.frozenmilk.sinister.loading.NoUnload
 import dev.frozenmilk.sinister.loading.Preload
 
@@ -19,9 +20,16 @@ fun interface OpModeRegistrar {
 
 @Suppress("unused")
 object OpModeRegistrarScanner : HookScanner<OpModeRegistrar>(OpModeRegistrar::class.java) {
-	@JvmStatic
-	@com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar
-	fun registerOpModes(opModeManager: AnnotatedOpModeManager) {
-		allHooks.forEach { it.registerOpModes(opModeManager) }
+	override val adjacencyRule = Scanner.INDEPENDENT
+
+	/**
+	 * prevents [registerOpModes] from being exposed publicly
+	 */
+	private object CALLSITE {
+		@JvmStatic
+		@com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar
+		fun registerOpModes(opModeManager: AnnotatedOpModeManager) {
+			allHooks.forEach { it.registerOpModes(opModeManager) }
+		}
 	}
 }

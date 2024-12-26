@@ -1,6 +1,7 @@
 package dev.frozenmilk.sinister.apphooks
 
 import android.content.Context
+import dev.frozenmilk.sinister.Scanner
 import dev.frozenmilk.sinister.loading.NoUnload
 import dev.frozenmilk.sinister.loading.Preload
 
@@ -19,9 +20,16 @@ fun interface OnDestroy {
 
 @Suppress("unused")
 object OnDestroyScanner : HookScanner<OnDestroy>(OnDestroy::class.java) {
-	@JvmStatic
-	@org.firstinspires.ftc.ftccommon.external.OnDestroy
-	fun onDestroy(context: Context) {
-		allHooks.forEach { it.onDestroy(context) }
+	override val adjacencyRule = Scanner.INDEPENDENT
+
+	/**
+	 * prevents [onDestroy] from being exposed publically
+	 */
+	private object CALLSITE {
+		@JvmStatic
+		@org.firstinspires.ftc.ftccommon.external.OnDestroy
+		fun onDestroy(context: Context) {
+			allHooks.forEach { it.onDestroy(context) }
+		}
 	}
 }
