@@ -30,7 +30,7 @@ ftc {
 dependencies {
 	testImplementation("junit:junit:4.13.2")
 
-	implementation("dev.frozenmilk.dairy:Util:1.1.0");
+	api("dev.frozenmilk.dairy:Util")
 }
 
 tasks.withType<Test>().configureEach {
