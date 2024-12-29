@@ -1,9 +1,20 @@
 package dev.frozenmilk.sinister.apphooks
 
 import android.content.Context
-import dev.frozenmilk.sinister.Scanner
+import android.view.Menu
+import com.qualcomm.robotcore.util.RobotLog
+import dev.frozenmilk.sinister.isPublic
+import dev.frozenmilk.sinister.isStatic
 import dev.frozenmilk.sinister.loading.NoUnload
 import dev.frozenmilk.sinister.loading.Preload
+import dev.frozenmilk.sinister.staticInstancesOf
+import dev.frozenmilk.util.graph.Graph
+import dev.frozenmilk.util.graph.GraphImpl
+import dev.frozenmilk.util.graph.rule.AdjacencyRule
+import dev.frozenmilk.util.graph.rule.independent
+import dev.frozenmilk.util.graph.sort
+import org.firstinspires.ftc.ftccommon.internal.AnnotatedHooksClassFilter
+import java.lang.reflect.Method
 
 /**
  * a more type-safe version of [org.firstinspires.ftc.ftccommon.external.OnDestroy]
@@ -15,21 +26,62 @@ import dev.frozenmilk.sinister.loading.Preload
 @FunctionalInterface
 @JvmDefaultWithoutCompatibility
 fun interface OnDestroy {
+	val adjacencyRule: AdjacencyRule<OnDestroy, Graph<OnDestroy>>
+		get() = INDEPENDENT
+
 	fun onDestroy(context: Context)
+
+	class SDKMethod internal constructor(val method: Method) : OnDestroy {
+		override fun onDestroy(context: Context) {
+			method.invoke(null, context)
+		}
+	}
+
+	companion object {
+		@JvmStatic
+		val INDEPENDENT: AdjacencyRule<OnDestroy, Graph<OnDestroy>> = independent()
+	}
 }
 
 @Suppress("unused")
-object OnDestroyScanner : HookScanner<OnDestroy>(OnDestroy::class.java) {
-	override val adjacencyRule = Scanner.INDEPENDENT
+object OnDestroyScanner : AppHookScanner<OnDestroy>() {
+	override fun scan(cls: Class<*>, registrationHelper: RegistrationHelper) {
+		cls.staticInstancesOf(OnDestroy::class.java).forEach { registrationHelper.register(it) }
+		cls.declaredMethods
+			.filter {
+				it.isStatic()
+						&& it.isPublic()
+						&& it.isAnnotationPresent(org.firstinspires.ftc.ftccommon.external.OnDestroy::class.java)
+						&& it.parameterCount == 1
+						&& it.parameterTypes[0] == Context::class.java
+						&& it.declaringClass != CALLSITE::class.java
+			}
+			.forEach {
+				registrationHelper.register(OnDestroy.SDKMethod(it))
+			}
+	}
 
 	/**
-	 * prevents [onDestroy] from being exposed publically
+	 * prevents [onDestroy] from being publicly exposed
 	 */
+	@Preload
 	private object CALLSITE {
+		init {
+			RobotLog.dd("OnDestroy", "<clinit>()V")
+			javaClass.getDeclaredMethod("onDestroy", Context::class.java).let {
+				AnnotatedHooksClassFilter::class.java.getDeclaredField("onDestroyMethods").apply {
+					isAccessible = true
+				}.set(AnnotatedHooksClassFilter.getInstance(), FalseSingletonSet(it))
+			}
+		}
 		@JvmStatic
 		@org.firstinspires.ftc.ftccommon.external.OnDestroy
 		fun onDestroy(context: Context) {
-			allHooks.forEach { it.onDestroy(context) }
+			val set = mutableSetOf<OnDestroy>()
+			iterateAppHooks(set::add)
+			GraphImpl(set).sort().forEach {
+				it.onDestroy(context)
+			}
 		}
 	}
 }
