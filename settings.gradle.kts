@@ -5,6 +5,7 @@ pluginManagement {
 		google()
 		maven("https://repo.dairy.foundation/releases")
 	}
+	includeBuild("../Plugins/FTCProjects")
 }
 
 includeBuild("Util") {

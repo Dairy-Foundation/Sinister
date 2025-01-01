@@ -1,25 +1,15 @@
 plugins {
-	id("dev.frozenmilk.library") version "10.1.1-0.0.0"
-	id("org.jetbrains.dokka") version "1.9.10"
-	id("maven-publish")
+	id("dev.frozenmilk.android-library")
+	id("dev.frozenmilk.publish") version "0.0.4"
+	id("dev.frozenmilk.doc") version "0.0.4"
 }
 
-android {
-	namespace = "dev.frozenmilk.sinister"
-
-	publishing {
-		singleVariant("release") {
-			withSourcesJar()
-			withJavadocJar()
-		}
-	}
-}
+android.namespace = "dev.frozenmilk.sinister"
 
 ftc {
 	kotlin
 
 	sdk {
-		appcompat
 		RobotCore
 		FtcCommon {
 			configurationNames += "testImplementation"
@@ -28,41 +18,17 @@ ftc {
 }
 
 dependencies {
-	testImplementation("junit:junit:4.13.2")
-
 	api("dev.frozenmilk.dairy:Util")
 }
 
-tasks.withType<Test>().configureEach {
-	javaLauncher = javaToolchains.launcherFor {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
-}
-
 publishing {
-	repositories {
-		maven {
-			name = "Release"
-			url = uri("https://repo.dairy.foundation/releases")
-			credentials(PasswordCredentials::class)
-			authentication {
-				create<BasicAuthentication>("basic")
-			}
-		}
-		maven {
-			name = "Snapshot"
-			url = uri("https://repo.dairy.foundation/snapshots")
-			credentials(PasswordCredentials::class)
-			authentication {
-				create<BasicAuthentication>("basic")
-			}
-		}
-	}
 	publications {
 		register<MavenPublication>("release") {
 			groupId = "dev.frozenmilk"
 			artifactId = "Sinister"
-			version = "2.0.2"
+
+			artifact(dairyDoc.dokkaHtmlJar)
+			artifact(dairyDoc.dokkaJavadocJar)
 
 			afterEvaluate {
 				from(components["release"])
