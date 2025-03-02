@@ -1,4 +1,4 @@
-package dev.frozenmilk.sinister.configurable.flag
+package dev.frozenmilk.sinister.util.flag
 
 import dev.frozenmilk.sinister.configurable.Configurable
 

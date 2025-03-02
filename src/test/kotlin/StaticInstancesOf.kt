@@ -8,13 +8,14 @@ class StaticInstancesOf {
 	@Test
 	fun objectInstance() {
 		Implementation::class.java.preload()
-		Assert.assertEquals(Implementation::class.java.staticInstancesOf(TestInterface::class.java), listOf(Implementation))
+
+		Assert.assertEquals(Implementation::class.java.staticInstancesOf(TestInterface::class.java), setOf(Implementation))
 	}
 
 	@Test
 	fun nestedObjectInstance() {
 		NestedImplementation::class.java.preload()
-		Assert.assertEquals(NestedImplementation::class.java.staticInstancesOf(TestInterface::class.java), listOf(NestedImplementation))
+		Assert.assertEquals(NestedImplementation::class.java.staticInstancesOf(TestInterface::class.java), setOf(NestedImplementation))
 	}
 }
 

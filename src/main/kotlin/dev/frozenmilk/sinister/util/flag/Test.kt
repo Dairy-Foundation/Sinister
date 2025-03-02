@@ -1,4 +1,4 @@
-package dev.frozenmilk.sinister.configurable.flag
+package dev.frozenmilk.sinister.util.flag
 
 object Test : Flag {
 	override var flag = false

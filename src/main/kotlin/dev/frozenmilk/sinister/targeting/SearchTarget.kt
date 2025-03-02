@@ -12,7 +12,7 @@ import dev.frozenmilk.util.tree.Tree
  * 	.exclude("com.example")
  * 	.include("com.example.Demo")
  */
-abstract class SearchTarget(
+open class SearchTarget(
 		/**
 		 * may not be [Inclusion.INHERIT]
 		 */
@@ -46,11 +46,17 @@ abstract class SearchTarget(
 		targets.getOrDefault(target.split('.', '$'), Inclusion.INHERIT).contents = status
 	}
 
-	fun determineInclusion(path: Collection<String>) : Boolean {
-		val inclusion = targets[path] ?: return determineInclusion(path.take(path.size - 1))
-		if (inclusion == Inclusion.INHERIT) return determineInclusion(path.take(path.size - 1))
+	fun determineInclusion(path: Sequence<String>) : Boolean {
+		var tree = targets
+		var inclusion = tree.contents
+		path.forEach {
+			if (tree.contents != Inclusion.INHERIT) inclusion = tree.contents
+			tree = tree.getChild(it) ?: return run {
+				inclusion == Inclusion.INCLUDE
+			}
+		}
 		return inclusion == Inclusion.INCLUDE
 	}
 
-	fun determineInclusion(path: String) = determineInclusion(path.split('.', '$'))
+	fun determineInclusion(path: String) = determineInclusion(path.splitToSequence('.', '$'))
 }

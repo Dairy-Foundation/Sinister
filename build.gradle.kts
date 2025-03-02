@@ -1,25 +1,21 @@
 plugins {
-	id("dev.frozenmilk.android-library")
+	id("dev.frozenmilk.jvm-library") version "10.1.1-0.1.3"
 	id("dev.frozenmilk.publish") version "0.0.4"
 	id("dev.frozenmilk.doc") version "0.0.4"
 }
 
-android.namespace = "dev.frozenmilk.sinister"
-
-ftc {
-	kotlin
-
-	sdk {
-		RobotCore
-		FtcCommon {
-			configurationNames += "testImplementation"
-		}
+repositories {
+	maven {
+		name = "dairyReleases"
+		url = uri("https://repo.dairy.foundation/releases")
 	}
 }
 
 dependencies {
-	api("dev.frozenmilk.dairy:Util")
+	api("dev.frozenmilk.dairy:Util:1.1.1")
 }
+
+group = "dev.frozenmilk.sinister"
 
 publishing {
 	publications {
@@ -27,11 +23,11 @@ publishing {
 			groupId = "dev.frozenmilk"
 			artifactId = "Sinister"
 
-			artifact(dairyDoc.dokkaHtmlJar)
 			artifact(dairyDoc.dokkaJavadocJar)
+			artifact(dairyDoc.dokkaHtmlJar)
 
 			afterEvaluate {
-				from(components["release"])
+				from(components["java"])
 			}
 		}
 	}

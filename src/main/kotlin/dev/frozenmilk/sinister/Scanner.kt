@@ -1,11 +1,12 @@
 package dev.frozenmilk.sinister
 
 import dev.frozenmilk.sinister.configurable.ConfigurableScanner
-import dev.frozenmilk.sinister.loading.NoUnload
+import dev.frozenmilk.sinister.loading.Pinned
 import dev.frozenmilk.sinister.loading.Preload
 import dev.frozenmilk.sinister.targeting.SearchTarget
 import dev.frozenmilk.util.graph.Graph
 import dev.frozenmilk.util.graph.rule.AdjacencyRule
+import dev.frozenmilk.util.graph.rule.dependedOn
 import dev.frozenmilk.util.graph.rule.dependsOn
 import dev.frozenmilk.util.graph.rule.independent
 
@@ -16,13 +17,30 @@ import dev.frozenmilk.util.graph.rule.independent
  * [dev.frozenmilk.sinister.Sinister], this should most likely not cause issues
  */
 @Preload
-@NoUnload
+@Pinned
 @JvmDefaultWithoutCompatibility
 interface Scanner {
 	/**
-	 * allows this to depend on other [Scanner]s
+	 * allows this to depend on other [Scanner]s for loads
+	 *
+	 * the vast majority of [Scanner]s should use [afterConfiguration],
+	 * or should include it
+	 *
+	 * dependency means that that [Scanner]'s full load cycle will
+	 * finish before this [Scanner]'s load cycle starts
 	 */
-	val adjacencyRule: AdjacencyRule<Scanner, Graph<Scanner>>
+	val loadAdjacencyRule: AdjacencyRule<Scanner, Graph<Scanner>>
+
+	/**
+	 * allows this to depend on other [Scanner]s for unloads
+	 *
+	 * the vast majority of [Scanner]s should use [beforeConfiguration],
+	 * or should include it
+	 *
+	 * dependency means that that [Scanner]'s full unload cycle will
+	 * finish before this [Scanner]'s unload cycle starts
+	 */
+	val unloadAdjacencyRule: AdjacencyRule<Scanner, Graph<Scanner>>
 
 	/**
 	 * items that should be ignored
@@ -50,7 +68,7 @@ interface Scanner {
 	 * this helps to cut down on boot time, but also should prevent most
 	 * synchronisation issues from appearing
 	 */
-	fun scan(cls: Class<*>)
+	fun scan(loader: ClassLoader, cls: Class<*>)
 
 	/**
 	 * gets run after [scan] is called for a round of scanning
@@ -74,19 +92,19 @@ interface Scanner {
 	 * this helps to cut down on dynamic load time, but also should prevent
 	 * most synchronisation issues from appearing
 	 */
-	fun unload(cls: Class<*>)
+	fun unload(loader: ClassLoader, cls: Class<*>)
 
 	/**
 	 * gets run after [unload] is called for a round of unloading
 	 */
 	fun afterUnload(loader: ClassLoader) {}
 
+	fun afterConfiguration(): AdjacencyRule<Scanner, Graph<Scanner>> = dependsOn(ConfigurableScanner)
+	fun beforeConfiguration(): AdjacencyRule<Scanner, Graph<Scanner>> = dependedOn(ConfigurableScanner)
+
 	companion object {
 		@JvmStatic
 		@get:JvmName("INDEPENDENT")
 		val INDEPENDENT = independent<Scanner, Graph<Scanner>>()
-		@JvmStatic
-		@get:JvmName("DEPENDS_ON_CONFIGURABLE")
-		val DEPENDS_ON_CONFIGURABLE = dependsOn { ConfigurableScanner }
 	}
 }
