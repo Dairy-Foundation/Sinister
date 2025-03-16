@@ -2,10 +2,13 @@ package dev.frozenmilk.sinister
 
 import dev.frozenmilk.sinister.loading.LoadEvent
 import dev.frozenmilk.sinister.loading.LoadEventHandler
+import dev.frozenmilk.sinister.configurable.ConfigurableScanner
 import java.util.function.Consumer
 
 /**
  * implementations of this class must call the event handlers on [LoadEventHandler]
+ *
+ * implementations of this class must run [ConfigurableScanner] by hand
  */
 interface Sinister {
 	companion object {

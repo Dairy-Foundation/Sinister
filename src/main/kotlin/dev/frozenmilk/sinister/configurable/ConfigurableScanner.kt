@@ -10,7 +10,15 @@ import dev.frozenmilk.sinister.targeting.WideSearch
 import dev.frozenmilk.util.graph.GraphImpl
 import dev.frozenmilk.util.graph.emitGraph
 
-internal object ConfigurableScanner : Scanner {
+/**
+ * WARNING: this Scanner is special, and must be run manually by Sinister implementations
+ *
+ * Because of this, it is not included in the standard Scanner graph, and is instead run before all
+ * other scanners for loading, and after all other scanners for unloading.
+ *
+ * Additionally, it is run before preloading.
+ */
+object ConfigurableScanner : Scanner {
 	override val loadAdjacencyRule = Scanner.INDEPENDENT
 	override val unloadAdjacencyRule = Scanner.INDEPENDENT
 	override val targets = WideSearch()
@@ -41,6 +49,8 @@ internal object ConfigurableScanner : Scanner {
 		Logger.v(javaClass.simpleName, "Configured core logging and warn utilities")
 		Logger.v(javaClass.simpleName, "Log: ${Logger.DELEGATE}")
 		Logger.v(javaClass.simpleName, "Warn: ${Warn.DELEGATE}")
+		configurables.remove(Logger)
+		configurables.remove(Warn)
 
 		configurables.forEach {
 			Logger.v(javaClass.simpleName, "configuring $it")

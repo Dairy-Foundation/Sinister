@@ -6,8 +6,6 @@ import dev.frozenmilk.sinister.loading.Preload
 import dev.frozenmilk.sinister.targeting.SearchTarget
 import dev.frozenmilk.util.graph.Graph
 import dev.frozenmilk.util.graph.rule.AdjacencyRule
-import dev.frozenmilk.util.graph.rule.dependedOn
-import dev.frozenmilk.util.graph.rule.dependsOn
 import dev.frozenmilk.util.graph.rule.independent
 
 /**
@@ -23,8 +21,7 @@ interface Scanner {
 	/**
 	 * allows this to depend on other [Scanner]s for loads
 	 *
-	 * the vast majority of [Scanner]s should use [afterConfiguration],
-	 * or should include it
+	 * all scanners are run after the [ConfigurableScanner]
 	 *
 	 * dependency means that that [Scanner]'s full load cycle will
 	 * finish before this [Scanner]'s load cycle starts
@@ -34,8 +31,7 @@ interface Scanner {
 	/**
 	 * allows this to depend on other [Scanner]s for unloads
 	 *
-	 * the vast majority of [Scanner]s should use [beforeConfiguration],
-	 * or should include it
+	 * all scanners are run before the [ConfigurableScanner]
 	 *
 	 * dependency means that that [Scanner]'s full unload cycle will
 	 * finish before this [Scanner]'s unload cycle starts
@@ -98,9 +94,6 @@ interface Scanner {
 	 * gets run after [unload] is called for a round of unloading
 	 */
 	fun afterUnload(loader: ClassLoader) {}
-
-	fun afterConfiguration(): AdjacencyRule<Scanner, Graph<Scanner>> = dependsOn(ConfigurableScanner)
-	fun beforeConfiguration(): AdjacencyRule<Scanner, Graph<Scanner>> = dependedOn(ConfigurableScanner)
 
 	companion object {
 		@JvmStatic
