@@ -1,18 +1,16 @@
 plugins {
-	id("dev.frozenmilk.jvm-library") version "10.1.1-0.1.3"
-	id("dev.frozenmilk.publish") version "0.0.4"
-	id("dev.frozenmilk.doc") version "0.0.4"
-}
-
-repositories {
-	maven {
-		name = "dairyReleases"
-		url = uri("https://repo.dairy.foundation/releases")
-	}
+	id("dev.frozenmilk.jvm-library") version "11.2.1-1.2.0"
+	id("dev.frozenmilk.publish") version "0.1.0"
+	id("dev.frozenmilk.doc") version "0.1.0"
 }
 
 dependencies {
-	api("dev.frozenmilk.dairy:Util:1.1.1")
+	api("dev.frozenmilk.dairy:Util:1.2.2")
+	testImplementation("junit:junit:4.13.2")
+}
+
+ftc {
+	kotlin()
 }
 
 group = "dev.frozenmilk.sinister"
