@@ -43,6 +43,7 @@ class LoadEvent<LOADER: ClassLoader>(
 	/**
 	 * adds an action to run if this is cancelled, before other actions
 	 */
+	@IgnorableReturnValue
 	fun beforeCancel(onCancel: Runnable): LoadEvent<LOADER> {
 		synchronized(this) {
 			val prev = this.onCancel
@@ -56,6 +57,7 @@ class LoadEvent<LOADER: ClassLoader>(
 	/**
 	 * adds an action to run if this is cancelled, after other actions
 	 */
+	@IgnorableReturnValue
 	fun afterCancel(onCancel: Runnable): LoadEvent<LOADER> {
 		synchronized(this) {
 			val prev = this.onCancel
@@ -82,6 +84,7 @@ class LoadEvent<LOADER: ClassLoader>(
 	/**
 	 * adds an action to run if this is released, before other actions
 	 */
+	@IgnorableReturnValue
 	fun beforeRelease(onRelease: Runnable): LoadEvent<LOADER> {
 		synchronized(this) {
 			val prev = this.onRelease
@@ -95,6 +98,7 @@ class LoadEvent<LOADER: ClassLoader>(
 	/**
 	 * adds an action to run if this is released, after other actions
 	 */
+	@IgnorableReturnValue
 	fun afterRelease(onRelease: Runnable): LoadEvent<LOADER> {
 		synchronized(this) {
 			val prev = this.onRelease
@@ -121,6 +125,7 @@ class LoadEvent<LOADER: ClassLoader>(
 	/**
 	 * adds an action to run if this is unloaded, before other actions
 	 */
+	@IgnorableReturnValue
 	fun beforeUnload(onUnload: Runnable): LoadEvent<LOADER> {
 		synchronized(this) {
 			val prev = this.onUnload
@@ -134,6 +139,7 @@ class LoadEvent<LOADER: ClassLoader>(
 	/**
 	 * adds an action to run if this is unloaded, after other actions
 	 */
+	@IgnorableReturnValue
 	fun afterUnload(onUnload: Runnable): LoadEvent<LOADER> {
 		synchronized(this) {
 			val prev = this.onUnload

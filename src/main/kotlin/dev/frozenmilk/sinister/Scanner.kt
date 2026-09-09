@@ -18,7 +18,6 @@ import dev.frozenmilk.util.graph.rule.independent
  */
 @Preload
 @Pinned
-@JvmDefaultWithoutCompatibility
 interface Scanner {
 	/**
 	 * allows this to depend on other [Scanner]s for loads

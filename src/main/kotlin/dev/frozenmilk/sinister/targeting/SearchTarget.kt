@@ -29,6 +29,7 @@ open class SearchTarget(
 	/**
 	 * includes this package or class
 	 */
+	@IgnorableReturnValue
 	fun include(target: String): SearchTarget {
 		setStatus(target, Inclusion.INCLUDE)
 		return this
@@ -37,6 +38,7 @@ open class SearchTarget(
 	/**
 	 * excludes this package or class
 	 */
+	@IgnorableReturnValue
 	fun exclude(target: String): SearchTarget {
 		setStatus(target, Inclusion.EXCLUDE)
 		return this

@@ -62,6 +62,7 @@ fun Class<*>.stageLoad(classLoader: ClassLoader?) = classLoader?.loadClass(this.
 } ?: throw NoLoaderException()
 
 @Throws(NoLoaderException::class, NoPreloadException::class)
+@IgnorableReturnValue
 fun Class<*>.preload() = if (!inheritsAnnotation(Preload::class.java)) throw NoPreloadException() else stageLoad(classLoader)
 
 @Throws(NoLoaderException::class, NoPreloadException::class)

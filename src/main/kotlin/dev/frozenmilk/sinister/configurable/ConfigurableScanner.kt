@@ -10,7 +10,7 @@ import dev.frozenmilk.sinister.targeting.WideSearch
 import dev.frozenmilk.util.graph.GraphImpl
 import dev.frozenmilk.util.graph.emitGraph
 
-internal object ConfigurableScanner : Scanner {
+object ConfigurableScanner : Scanner {
 	override val loadAdjacencyRule = Scanner.INDEPENDENT
 	override val unloadAdjacencyRule = Scanner.INDEPENDENT
 	override val targets = WideSearch()
