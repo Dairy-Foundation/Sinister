@@ -8,6 +8,7 @@ import dev.frozenmilk.sinister.Sinister
  * the operation is not performed until [release] is called
  */
 class LoadEvent<LOADER: ClassLoader>(
+	val prior: LoadEvent<LOADER>?,
 	/**
 	 * [LOADER] related to this load event
 	 */
@@ -70,13 +71,14 @@ class LoadEvent<LOADER: ClassLoader>(
 	}
 
 	/**
-	 * cancels this staged operation if [stage] is [Stage.Staged], otherwise does nothing
+	 * cancels this staged operation and returns the [prior] if [stage] is [Stage.Staged], otherwise does nothing
 	 */
-	fun cancel() {
+	fun cancel(): LoadEvent<LOADER>? {
 		synchronized(this) {
-			if (stage != Stage.Staged) return
+			if (stage != Stage.Staged) return null
 			stage = Stage.Cancelled
 			onCancel.run()
+			return prior
 		}
 	}
 

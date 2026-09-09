@@ -20,5 +20,10 @@ interface Sinister {
 	 *
 	 * Only [LoadEventHandler] should [LoadEvent.release] this event. The caller of this function should not.
 	 */
-	fun <LOADER: ClassLoader> stageLoad(loader: LOADER, classNames: List<String>, apply: Consumer<LoadEvent<LOADER>>)
+	fun <LOADER: ClassLoader> stageLoad(
+		prior: LoadEvent<LOADER>?,
+		loader: LOADER,
+		classNames: List<String>,
+		apply: Consumer<LoadEvent<LOADER>>,
+	)
 }
